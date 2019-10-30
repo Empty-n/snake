@@ -1,0 +1,26 @@
+/* h1 {
+    text-align: center
+} */
+
+span {
+  float: right;
+  position: absolute;
+  top: 5px;
+  right: 50px;
+}
+
+* {
+  background: rgb(26, 94, 37);
+}
+
+div {
+  background: rgb(26, 94, 37);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas {
+  border: 1px solid white;
+  margin-top: 20px;
+}
