@@ -1,8 +1,9 @@
 span {
-  float: right;
   position: absolute;
   top: 5px;
   right: 50px;
+  font-weight: bold;
+  color: white
 }
 
 * {

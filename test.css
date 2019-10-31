@@ -33,7 +33,7 @@
     }
 
     100% {
-        letter-spacing: 100px;
+        letter-spacing: 1em;
         opacity: 1;
     }
 }
