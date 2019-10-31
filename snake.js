@@ -10,6 +10,7 @@ var score = document.getElementById("score").innerHTML;
 const sound = new Audio("./oh_my_god.mp3");
 const sound2 = new Audio("./qu'elle est ce fuck.mp3");
 const sound3 = new Audio("./pomme.mp3");
+const sound4 = new Audio("./Nelson.mp3");
 var point = 0; // score
 var vitesse = 15; // velocity of snake
 var apple = {};
@@ -125,6 +126,7 @@ function loop() {
     context.fillRect(cell.x, cell.y, snake.height, snake.width);
     for (var i = index + 1; i < snake.cells.length; i++) {
       if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+        sound4.play();
         isPaused = !isPaused;
         restart.style.opacity = 100;
       }
