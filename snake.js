@@ -1,11 +1,14 @@
 var canvas = document.getElementById("canvas");
 var div = document.getElementsByClassName("div");
+var restart = document.getElementById("restart");
 var context = canvas.getContext("2d");
 var count = 0;
 var compteurP = 0;
+var isPaused = false;
 var score = document.getElementById("score").innerHTML;
 const sound = new Audio("./oh_my_god.mp3");
 const sound2 = new Audio("./qu'elle est ce fuck.mp3");
+const sound3 = new Audio("./pomme.mp3");
 var point = 0;
 var vitesse = 15;
 var snake = {
@@ -22,6 +25,7 @@ var snake = {
 
   taille: 10
 };
+
 function getRandomInt(min, max) {
   var test = Math.floor(Math.random() * (max - min + 1) + min);
   if (test % 15 != 0) return getRandomInt(min, max);
@@ -29,16 +33,13 @@ function getRandomInt(min, max) {
 }
 var apple = {};
 
-// x: getRandomInt(1, canvas.width),
-// y: getRandomInt(1, canvas.height)
-
 function initApple() {
   apple.x = getRandomInt(1, canvas.width - 15);
   apple.y = getRandomInt(1, canvas.height - 15);
   for (let i = 0; i < snake.cells.length; i++) {
     if (apple.x === snake.cells[i].x && apple.y === snake.cells[i].y) {
-      apple.x = getRandomInt(1, canvas.width);
-      apple.y = getRandomInt(1, canvas.height);
+      apple.x = getRandomInt(1, canvas.width - 15);
+      apple.y = getRandomInt(1, canvas.height - 15);
     }
   }
 }
@@ -48,15 +49,22 @@ function drawApple() {
   context.fillRect(apple.x, apple.y, 15, 15);
 }
 
+let animationFrameId;
+let x = 0;
 let frameRate = 4;
 // game loop
 function loop() {
-  requestAnimationFrame(loop);
+  animationFrameId = requestAnimationFrame(loop);
+  if (isPaused) {
+    x = 0;
+    return;
+  }
   // slow game loop to 15 fps instead of 60 (60/15 = 4)
   if (++count < frameRate) {
     return;
   }
   count = 0;
+  x = 0;
   canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
   // move snake by it's velocity
   snake.x += snake.dx;
@@ -92,6 +100,7 @@ function loop() {
   context.fillStyle = "rgb(254, 208, 42)";
   snake.cells.forEach(function(cell, index) {
     if (cell.x == apple.x && cell.y == apple.y) {
+      sound3.play();
       snake.taille += 15;
       point += 5;
       compteurP++;
@@ -113,8 +122,8 @@ function loop() {
     context.fillRect(cell.x, cell.y, snake.height, snake.width);
     for (var i = index + 1; i < snake.cells.length; i++) {
       if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
-        location.reload();
-        alert("perdu");
+        isPaused = !isPaused;
+        restart.style.opacity = 100;
       }
     }
   });
@@ -123,8 +132,12 @@ function loop() {
 
 function moveSnake() {
   document.addEventListener("keydown", function(e) {
-    if (e.which === 32) {
+    if (e.which === 32 && x < 3) {
+      isPaused = !isPaused;
+      x++;
+      console.log(isPaused);
     }
+
     // left arrow key
     if (e.which === 37 && snake.dx === 0) {
       snake.dx = -vitesse;
@@ -146,6 +159,25 @@ function moveSnake() {
       snake.dx = 0;
     }
   });
+}
+
+function PopupCentrer(page, largeur, hauteur, options) {
+  var top = (screen.height - hauteur) / 2;
+  var left = (screen.width - largeur) / 2;
+  window.open(
+    page,
+    "",
+    "top=" +
+      top +
+      ",left=" +
+      left +
+      ",width=" +
+      largeur +
+      ",height=" +
+      hauteur +
+      "," +
+      options
+  );
 }
 
 // start the game

@@ -12,12 +12,21 @@
     </head>
 
     <body>
-        <!-- <h1> Snake </h1> -->
         <span id="score">SCORE:</span>
         <div>
             <canvas width="1200" height="600" id="canvas"></canvas>
             <script type="module" src="snake.js"> </script>
+            <div id="restart">
+                <img class='displayed' id="Looser" src="./giphy.gif" alt="Looser">
+                <div id="buttons">
+                    <input class="text-focus-in3" type="button" value="Restart"
+                        onclick="document.location.href='jeu.html';">
+                    <input class="text-focus-in3" type="button" value="Nope"
+                        onclick="document.location.href='index.html';">
+                </div>
+            </div>
         </div>
+
     </body>
 
     </html>
