@@ -2,20 +2,23 @@ var canvas = document.getElementById("canvas");
 var div = document.getElementsByClassName("div");
 var restart = document.getElementById("restart");
 var context = canvas.getContext("2d");
-var count = 0;
-var compteurP = 0;
-var isPaused = false;
+var overlay = document.getElementById("overlay");
+var count = 0; // game's speed(work with frameRate)
+var compteurP = 0; // apple count
+var isPaused = false; // boolean for pause
 var score = document.getElementById("score").innerHTML;
 const sound = new Audio("./oh_my_god.mp3");
 const sound2 = new Audio("./qu'elle est ce fuck.mp3");
 const sound3 = new Audio("./pomme.mp3");
-var point = 0;
-var vitesse = 15;
+var point = 0; // score
+var vitesse = 15; // velocity of snake
+var apple = {};
+
 var snake = {
   x: canvas.width / 2,
   y: canvas.height / 2,
-  height: 13,
-  width: 13,
+  height: 14,
+  width: 14,
   // snake velocity. moves one grid length every frame in either the x or y direction
   dx: 15,
   dy: 0,
@@ -31,7 +34,6 @@ function getRandomInt(min, max) {
   if (test % 15 != 0) return getRandomInt(min, max);
   else return test;
 }
-var apple = {};
 
 function initApple() {
   apple.x = getRandomInt(1, canvas.width - 15);
@@ -46,12 +48,13 @@ function initApple() {
 
 function drawApple() {
   context.fillStyle = "red";
-  context.fillRect(apple.x, apple.y, 15, 15);
+  context.fillRect(apple.x, apple.y, 14, 14);
 }
 
-let animationFrameId;
-let x = 0;
-let frameRate = 4;
+let animationFrameId; //
+let frameRate = 4; // game's speed
+let x = 0; // pause
+
 // game loop
 function loop() {
   animationFrameId = requestAnimationFrame(loop);
@@ -66,6 +69,7 @@ function loop() {
   count = 0;
   x = 0;
   canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+
   // move snake by it's velocity
   snake.x += snake.dx;
   snake.y += snake.dy;
@@ -84,7 +88,6 @@ function loop() {
     snake.y = 0;
   }
 
-  console.log(compteurP);
   if (!apple.x && !apple.y) initApple();
   else drawApple();
 
@@ -99,6 +102,7 @@ function loop() {
   // draw snake one cell at a time
   context.fillStyle = "rgb(254, 208, 42)";
   snake.cells.forEach(function(cell, index) {
+    // eat apple
     if (cell.x == apple.x && cell.y == apple.y) {
       sound3.play();
       snake.taille += 15;
@@ -107,7 +111,6 @@ function loop() {
       apple = {};
       document.getElementById("score").innerHTML = score + " " + point;
 
-      drawApple();
       if (compteurP > 3) {
         if (compteurP === 4) sound.play();
         frameRate = 2;
@@ -133,9 +136,10 @@ function loop() {
 function moveSnake() {
   document.addEventListener("keydown", function(e) {
     if (e.which === 32 && x < 3) {
+      overlay.style.visibility =
+        overlay.style.visibility == "visible" ? "hidden" : "visible";
       isPaused = !isPaused;
       x++;
-      console.log(isPaused);
     }
 
     // left arrow key
@@ -159,25 +163,6 @@ function moveSnake() {
       snake.dx = 0;
     }
   });
-}
-
-function PopupCentrer(page, largeur, hauteur, options) {
-  var top = (screen.height - hauteur) / 2;
-  var left = (screen.width - largeur) / 2;
-  window.open(
-    page,
-    "",
-    "top=" +
-      top +
-      ",left=" +
-      left +
-      ",width=" +
-      largeur +
-      ",height=" +
-      hauteur +
-      "," +
-      options
-  );
 }
 
 // start the game
